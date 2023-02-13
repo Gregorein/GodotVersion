@@ -57,7 +57,7 @@ The GodotVersion plugin adds a new `version` property to the `ProjectSettings` o
 To access the current project version using the version property, you can use the following code:
 
 ```gdscript 
-var current_version = ProjectSettings["version"]["SemVer"]
+var current_version = ProjectSettings.get_setting("version")
 ```
 
 This will assign the current version of the project to the `current_version` variable. You can then use this variable to display the version number in your game in a `Label` Control.

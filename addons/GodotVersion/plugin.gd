@@ -1,13 +1,27 @@
-tool
+@tool
 extends EditorPlugin
 
-func build() -> bool:
-	var file = File.new()
-	var fileStatus = file.open("res://GitVersion.json", File.READ)
-	if (fileStatus == OK):
-		var version = parse_json(file.get_as_text())
-		print("version: ", version["SemVer"])
-		ProjectSettings.version = version
-		file.close()
+var path = "res://GitVersion.json"
+var file
+
+func _enter_tree():
+	if FileAccess.file_exists(path):
+		file = FileAccess.open(path, FileAccess.READ)
+
+	updateVersion()
+
+func _build():
+	updateVersion()
 
 	return true
+
+func updateVersion():
+	var version = JSON.parse_string(file.get_as_text())["SemVer"]
+
+	ProjectSettings.set_setting("version", version)
+	ProjectSettings.save()
+	
+	print("version: ", version)
+
+func _exit_tree():
+	file = null
